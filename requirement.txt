@@ -1,0 +1,10 @@
+tqdm==4.62.3
+numpy==1.26.4 
+matplotlib==3.6.1  
+scikit-learn==1.5.2
+fairlearn==0.9.0 
+folktables==0.0.12
+mapie==1.0.0 
+pandas==2.2.3
+tabpfn==2.0.6
+tabicl==0.0.1
