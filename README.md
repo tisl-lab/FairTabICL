@@ -1,6 +1,6 @@
 # Towards Fair In-Context Learning with Tabular Foundation Models
 
-This repository contains code for running fairness experiments with different models and selection methods, focusing on tabular in-context learning approaches.
+This repository contains code for running fairness experiments with different models and selection methods, focusing on tabular in-context learning approaches. Read the paper: [https://arxiv.org/pdf/2505.09503](https://arxiv.org/pdf/2505.09503)
 
 ## Setup
 
