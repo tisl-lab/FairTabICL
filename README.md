@@ -14,12 +14,20 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+
+3. Install [TabDPT](https://github.com/layer6ai-labs/TabDPT-inference):
+```bash
+git clone git@github.com:layer6ai-labs/TabDPT.git
+cd TabDPT
+pip install -e .
+```
+
 ## Running Experiments
 
 You can run experiments for single evaluation or fairness-accuracy :
 
 - Use `src/run.py` for single fairness evaluation with different preprocessings  (details below)
-- Use `src/Tradeoff_Evaluation.py` for fairness-accuracy tradeoff evaluation.
+- Use `src/tradeoff_evaluation.py` for fairness-accuracy tradeoff evaluation.
 
 ## Data Preprocessing
 
@@ -94,11 +102,11 @@ python src/run.py --dataset diabetes_race --base_model tabicl --selection_method
 
 - Uncertainty-based method
 ```bash
-python src/Tradeoff_Evaluation.py --dataset adult_income --base_model tabpfn --selection_method uncertain --base_model_uncertainty tabpfn
+python src/tradeoff_evaluation.py --dataset adult_income --base_model tabpfn --selection_method uncertain --base_model_uncertainty tabpfn
 ```
 - Correlation Remover
 ```bash
-python src/Tradeoff_Evaluation.py --dataset adult_income --base_model tabpfn --selection_method correlation_remover
+python src/tradeoff_evaluation.py --dataset adult_income --base_model tabpfn --selection_method correlation_remover
 ```
 
 ## Results
