@@ -144,9 +144,9 @@ def main(args, epsilons):
 
     if args.selection_method.endswith("certain"):
         selection_method += f"_{args.base_model_uncertainty}"
-
-    if args.selection_method == "correlation_remover":
+    elif args.selection_method == "correlation_remover":
         selection_method += f"_{args.cr_sanitization_strategy}"
+    
     out_path = "analysis/tradeoff/{}/t_size_{}/{}/{}".format(
         args.dataset, args.train_size, args.base_model, selection_method
     )
@@ -206,17 +206,23 @@ if __name__ == "__main__":
     arg = parser.parse_args()
 
     # epsilons
-    epsilon_range = np.arange(0.701, 0.991, 0.004)
+    """ epsilon_range = np.arange(0.701, 0.991, 0.004)
     base = np.arange(0.00, 0.7, 0.05)  # [0.01, 0.05, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7]
     epsilon_range = list(base) + list(epsilon_range) + [0.9999]
-    epsilons = [round(x, 3) for x in epsilon_range]  # 81 values
+    epsilons = [round(x, 3) for x in epsilon_range]  """
+
+    epsilon_range = np.arange(0.701, 0.991, 0.004)
+    base = [0.0, 0.05, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7]
+    epsilon_range = base + list(epsilon_range) + [0.9999]
+    epsilons = [round(x, 3) for x in epsilon_range]  # 300 values 
 
     if arg.selection_method == "uncertain":
         epsilons = 1 - np.array(epsilons)
         epsilons = np.array([round(x, 3) for x in epsilons])
         epsilons = epsilons[epsilons > 0]
         epsilons = epsilons[epsilons < 1]
-
+    if arg.selection_method == "vanilla" or arg.selection_method == "group_balanced":
+        epsilons = [1]
     seed_everything(arg.seed)
 
     main(arg, epsilons)

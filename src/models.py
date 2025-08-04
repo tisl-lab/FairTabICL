@@ -2,6 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from tabpfn import TabPFNClassifier
 from tabicl import TabICLClassifier
+from tabdpt import TabDPTClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
 
@@ -17,6 +18,8 @@ def get_model(model_name):
         return TabPFNClassifier()
     elif model_name == "tabicl":
         return TabICLClassifier()
+    elif model_name == "tabdpt":
+        return TabDPTClassifier()
 
     raise ValueError(
         f"Model {model_name} not properly implemented in get_model function"

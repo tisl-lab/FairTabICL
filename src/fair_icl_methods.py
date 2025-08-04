@@ -126,89 +126,7 @@ def group_balanced_sampling(X_train, s_train, train_size=-1):
     return balanced_indices
 
 
-def uncertainty_based_sample_selection2(
-    base_classifier,
-    X_train,
-    data_with_sensitive_attrib,
-    cp_alpha=0.05,
-):
-    """
-    Identify certain and uncertain predictions using conformal prediction.
-
-    Args:
-        X_train (numpy.ndarray): Feature matrix for training data
-        data_with_sensitive_attrib (tuple): Tuple containing (X, s) where X is features, and s is sensitive attributes
-        cp_alpha (float, optional): Significance level for conformal prediction. Defaults to 0.05.
-        base_model_uncertainty (str, optional): Base model to use for uncertainty estimation.
-                                               Defaults to "tabpfn".
-
-    Returns:
-        tuple: Indices of certain and uncertain predictions
-    """
-
-    def get_certain_uncertain_predictions(prediction_sets):
-        """
-        Separate predictions into certain and uncertain sets based on prediction set size.
-
-        Args:
-            prediction_scores (numpy.ndarray): Prediction set scores
-
-        Returns:
-            tuple: Indices of certain and uncertain predictions
-        """ 
-        uncertain_indices = []
-        certain_indices = []
-        for i in range(len(prediction_sets)):
-            prediction_set_size = prediction_sets[i].sum(axis=0)[0]
-            if prediction_set_size == 1:
-                certain_indices.append(i)
-            else:
-                uncertain_indices.append(i)
-        return certain_indices, uncertain_indices
-
-    X_train_aux, s_train_aux = data_with_sensitive_attrib
-
-    (
-        X_train_split,
-        X_cal,
-        s_train_split,
-        s_cal,
-    ) = train_test_split(X_train_aux, s_train_aux, test_size=0.2)
-
-    """  X_calib, X_conformal, s_calib, s_conformal = train_test_split(
-        X_validation, s_validation, test_size=0.5
-    ) """
-
-    if isinstance(base_classifier, TabPFNClassifier) and len(X_train_split) >= 10000:
-        # sub-sample the maximum of 10000 samples that TabPFN can handle
-        print(
-            "=============== SUBSAMPLING TO 10000 SAMPLES FOR TabPFN==================== "
-        )
-        sample_indices = np.random.choice(len(X_train_split), size=10000, replace=False)
-        X_train_split = X_train_split[sample_indices]
-        s_train_split = s_train_split[sample_indices]
-
-    #cb_classifier = CalibratedClassifierCV(estimator=base_classifier, method="sigmoid", cv=5)
-    # cb_classifier.fit(X_train_split, s_train_split)
-    base_classifier.fit(X_train_split, s_train_split)
-    
-    """ calibrated_classifier = CalibratedClassifierCV(
-        estimator=base_classifier, method="sigmoid", cv="prefit"
-    )
-
-    calibrated_classifier.fit(X_calib, s_calib) """
-
-    conformal_classifier = MapieClassifier(
-        estimator=base_classifier, method="lac", cv="prefit"
-    )
-    conformal_classifier.fit(X_cal, s_cal)
  
-    _, prediction_set_scores = conformal_classifier.predict(X_train, alpha=[cp_alpha])
-
-    certain_indices, uncertain_indices = get_certain_uncertain_predictions(prediction_set_scores)
-
-    return certain_indices, uncertain_indices
-
 
 def uncertainty_based_sample_selection(
     base_classifier,
@@ -258,7 +176,7 @@ def uncertainty_based_sample_selection(
         X_validation,
         s_train_split,
         s_validation,
-    ) = train_test_split(X_train_aux, s_train_aux, test_size=0.2)
+    ) = train_test_split(X_train_aux, s_train_aux, test_size=0.3)
 
     X_calib, X_conformal, s_calib, s_conformal = train_test_split(
         X_validation, s_validation, test_size=0.5

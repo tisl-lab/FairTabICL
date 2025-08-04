@@ -8,7 +8,7 @@ def add_input_args(parser):
         type=str,
         default="tabpfn",
         help="Primary classifier model to use for predictions",
-        choices=["tabpfn", "tabicl", "gbm"],
+        choices=["tabpfn", "tabicl", "gbm", "tabdpt"],
         )
 
     parser.add_argument(
